@@ -17,13 +17,13 @@ public class waitingListController {
         this.waitingListService = waitingListService;
     }
 
-    @GetMapping("/doctor/{doctorId}") //GET istegi httpden
-    public List<waitingList> getDoctorWaitingList(@PathVariable long doctorId) {
-        return waitingListService.getDoctorWaitingList(doctorId);
+    @GetMapping("/doctor/{doctorNationalId}") //GET istegi httpden
+    public List<waitingList> getDoctorWaitingList(@PathVariable long doctorNationalId) {
+        return waitingListService.getDoctorWaitingList(doctorNationalId);
     }
     
-    @GetMapping("/patient/{tc}")
-    public List<waitingList> getPatientWaitingList(@PathVariable long tc) {
-        return waitingListService.getPatientWaitingList(tc);
+    @GetMapping("/patient/{patientNationalId}")
+    public List<waitingList> getPatientWaitingList(@PathVariable long patientNationalId) {
+        return waitingListService.getPatientWaitingList(patientNationalId);
     }
 }

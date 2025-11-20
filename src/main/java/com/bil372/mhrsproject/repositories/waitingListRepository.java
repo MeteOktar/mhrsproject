@@ -8,7 +8,7 @@ import com.bil372.mhrsproject.entities.waitingList;
 
 public interface waitingListRepository extends JpaRepository<waitingList,Integer>{
 
-    List<waitingList> findByDoctorId(long doctorNationalId);
+    List<waitingList> findBydoctorNationalId(long doctorNationalId);
 
-    List<waitingList> findByPatientId(long patientNationalId);
+    List<waitingList> findBypatientNationalId(long patientNationalId);
 }
