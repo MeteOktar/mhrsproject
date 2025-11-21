@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Table(name= "waiting_list")
 @Entity
-public class waitingList {
+public class WaitingList {
     @Id
     @Column(name = "waitingId")
     private int waitingId;
