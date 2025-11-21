@@ -22,7 +22,7 @@ public class waitingList {
     private String level;
 
     @Column(name = "doctorNationalId")
-    private long doctorNationalId;
+    private String doctorNationalId;
 
     @Column(name = "hospitalId")
     private int hospitalId;
@@ -31,7 +31,7 @@ public class waitingList {
     private int departmentId;
 
     @Column(name = "patientNationalId")
-    private long patientNationalId;
+    private String patientNationalId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime requestDateTime;
