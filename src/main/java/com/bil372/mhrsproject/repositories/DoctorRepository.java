@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bil372.mhrsproject.entities.Doctor;
+import com.bil372.mhrsproject.entities.Hospital;
+import com.bil372.mhrsproject.entities.HospitalDepartment;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
@@ -12,9 +14,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Optional<Doctor> findByDoctorNationalId(long doctorNationalId);
 
     // Hastaneye göre doktor listesi
-    List<Doctor> findByHospitalId(int hospitalId);
+    List<Doctor> findByHospital(Hospital hospital);
 
     // Departmana göre doktor listesi
-    List<Doctor> findByHospitalAndDepartmentId(int hospitalId,int departmentId);
+    List<Doctor> findByHospitalAndDepartment(Hospital hospital,HospitalDepartment department);
 }
 

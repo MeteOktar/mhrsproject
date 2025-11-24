@@ -2,23 +2,19 @@ package com.bil372.mhrsproject.entities;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@SuppressWarnings("unused")
 @Data
 @Table(name= "doctors")
 @Entity
@@ -37,10 +33,19 @@ public class Doctor {
     @JoinColumn(name = "hospitalId")
     private Hospital hospital;
 
-    @Column(name = "departmentId")
-    private int departmentId;
+    @ManyToOne
+    @JoinColumn(name = "departmentId")
+    private HospitalDepartment department;
     
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<WaitingList> waitingLists;
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<AppointmentSlot> doctorAppointmentSlots;
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Prescription> doctorPrescriptions;
 }

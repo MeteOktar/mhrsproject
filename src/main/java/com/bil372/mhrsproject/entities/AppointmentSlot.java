@@ -1,40 +1,52 @@
 package com.bil372.mhrsproject.entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Table(name = "appointment_slots")
 @Entity
-public class AppointmentSlots {
+public class AppointmentSlot {
     @Id
-    @Column(name="appointmendId")
-    private int appointmendId;
+    @Column(name="appointmentId")
+    private int appointmentId;
 
-    @Column(name = "doctorNationalId")
-    private long doctorNationalId;
+    @ManyToOne
+    @JoinColumn(name = "doctorNationalId")
+    private Doctor doctor;
 
     @ManyToOne
     @JoinColumn(name = "hospitalId")
     private Hospital hospital;
 
-    @Column(name = "departmentId")
-    private int departmentId;
+    @ManyToOne
+    @JoinColumn(name = "departmentId")
+    private HospitalDepartment department;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime slotDateTime;
 
-    @Column(name = "patientNationalId")
-    private long patientNationalId;
+    @ManyToOne
+    @JoinColumn(name = "patientNationalId")
+    private Patient patient;
+
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Prescription> appointmentPrescriptions;
 
     @Column(name = "status")
     private String status;

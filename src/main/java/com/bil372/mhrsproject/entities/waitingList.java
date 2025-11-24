@@ -3,9 +3,6 @@ package com.bil372.mhrsproject.entities;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,7 +22,6 @@ public class WaitingList {
     @Column(name = "level")
     private String level;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "doctorNationalId")
     private Doctor doctor;

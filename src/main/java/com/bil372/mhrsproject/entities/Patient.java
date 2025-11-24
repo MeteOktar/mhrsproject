@@ -1,8 +1,14 @@
 package com.bil372.mhrsproject.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -11,7 +17,7 @@ import lombok.Data;
 @Entity
 public class Patient {
     @Id
-    @Column(name = "patientNationalId")
+    @Column(name = "nationalId")
     private long patientNationalId;
 
     @Column(name = "firstName")
@@ -28,4 +34,16 @@ public class Patient {
 
     @Column(name = "bloodType")
     private String bloodType;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<WaitingList> patientWaitingLists;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<AppointmentSlot> pAppointmentSlots;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Prescription> patientPrescriptions;
 }

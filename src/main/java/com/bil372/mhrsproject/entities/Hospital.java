@@ -29,11 +29,11 @@ public class Hospital {
 
     @OneToMany(mappedBy = "hospital", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<AppointmentSlots> appointmentSlots;
+    private List<AppointmentSlot> appointmentSlots;
 
     @OneToMany(mappedBy = "hospital", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Prescriptions> prescriptions;
+    private List<Prescription> prescriptions;
 
     @Id
     @Column(name = "hospitalId")
