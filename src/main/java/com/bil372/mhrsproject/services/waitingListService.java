@@ -52,9 +52,6 @@ public class WaitingListService {
         if (w.getPatient() != null) {
             patientName = w.getPatient().getFirstName() + " " + w.getPatient().getLastName();
         }
-        if(w.getPatient() == null){
-            System.out.println("dababy1");
-        }
 
         return new WaitingListDTO(
                 w.getWaitingId(),
