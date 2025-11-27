@@ -20,6 +20,9 @@ public class Patient {
     @Column(name = "nationalId")
     private long patientNationalId;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Column(name = "firstName")
     private String firstName;
 

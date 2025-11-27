@@ -13,4 +13,5 @@ public interface WaitingListRepository extends JpaRepository<WaitingList,Integer
     List<WaitingList> findByDoctor(Doctor doctor);
 
     List<WaitingList> findByPatient(Patient patient); //bir hasta 1 waiting listte olabilecegi icin tek döner
+
 }

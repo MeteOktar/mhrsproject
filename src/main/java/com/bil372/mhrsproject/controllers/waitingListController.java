@@ -5,8 +5,7 @@ import com.bil372.mhrsproject.services.WaitingListService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController //rest api oldugunu ve json donecegini belirtir
 @RequestMapping("/api/waiting-list") //donecek her seyin urlsi /api/waiting-list/... olur
@@ -26,4 +25,10 @@ public class WaitingListController {
     public List<WaitingListDTO> getPatientWaitingList(@PathVariable long patientNationalId) {
         return waitingListService.getPatientWaitingList(patientNationalId);
     }
+
+    @GetMapping("/admin/")
+    public List<WaitingListDTO> getAdminWaitingList(){
+        return waitingListService.getAdminWaitingList();
+    }
+    
 }

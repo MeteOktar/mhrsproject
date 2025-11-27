@@ -38,6 +38,11 @@ public class WaitingListService {
         return result.stream().map(this::waitinglistDTOMapper).toList();
     }
 
+    public List<WaitingListDTO> getAdminWaitingList() {
+        List<WaitingList> result = waitingListRepository.findAll();
+        return result.stream().map(this::waitinglistDTOMapper).toList();
+    }
+
     private WaitingListDTO waitinglistDTOMapper(WaitingList w){
 
         String doctorName = null;
