@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController //rest api oldugunu ve json donecegini belirtir
-@RequestMapping("/api/hospital") //donecek her seyin urlsi /api/waiting-list/... olur
+@RequestMapping("/api/hospital")
 public class HospitalController {
 
     private final HospitalService hospitalService;
@@ -28,5 +28,16 @@ public class HospitalController {
         return hospitalService.getHospitalsByLocation(city, district);
 
     }
+
+    @GetMapping("/cities")
+    public List<String> getAllCities(){
+        return hospitalService.getAllCities();
+    }
+    @GetMapping("/cities/{city}/districts")
+    public List<String> getDistrictsInCity(@PathVariable String city) {
+        return hospitalService.getAllDistrictsInCity(city);
+    }
+    
+    
     
 }

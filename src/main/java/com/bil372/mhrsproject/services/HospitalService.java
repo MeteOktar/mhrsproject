@@ -37,4 +37,11 @@ public class HospitalService {
             return hospitalRepository.findByCityAndDistrict(city, district);
         }
     }
+    public List<String> getAllCities(){
+        return hospitalRepository.findAllCities();
+    }
+
+    public List<String> getAllDistrictsInCity(String city){
+        return hospitalRepository.findAllDistrictsInCity(city);
+    }
 }
