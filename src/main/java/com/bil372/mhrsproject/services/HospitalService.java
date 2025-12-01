@@ -44,4 +44,9 @@ public class HospitalService {
     public List<String> getAllDistrictsInCity(String city){
         return hospitalRepository.findAllDistrictsInCity(city);
     }
+
+
+    public List<Hospital> getAllHospitals() {
+        return hospitalRepository.findAll();
+    }
 }

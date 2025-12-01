@@ -23,6 +23,8 @@ public interface AppointmentSlotsRepository extends JpaRepository<AppointmentSlo
 
     List<AppointmentSlot> findByPatient_PatientNationalId(long patientNationalId);
 
+    long countByStatus(String status);
+
     List<AppointmentSlot> findByHospitalAndDepartment(
     Hospital hospital,
     HospitalDepartment department

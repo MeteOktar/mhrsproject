@@ -24,12 +24,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/hospital/**").permitAll()
+                .requestMatchers("api/**").permitAll()
+                /* .requestMatchers("/api/hospital/**").permitAll()
                 .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
                 .requestMatchers("/api/patient/**").hasRole("PATIENT")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                //.requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").permitAll() */
                 .anyRequest().authenticated()
             )
             .userDetailsService(customUserDetailsService)
