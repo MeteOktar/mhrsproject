@@ -3,6 +3,7 @@ package com.bil372.mhrsproject.services;
 import org.springframework.stereotype.Service;
 
 import com.bil372.mhrsproject.DTOs.DoctorDTO;
+import com.bil372.mhrsproject.DTOs.DoctorInfoDTO;
 import com.bil372.mhrsproject.entities.Doctor;
 import com.bil372.mhrsproject.repositories.DoctorRepository;
 
@@ -19,13 +20,13 @@ public class DoctorService {
         return doctor;
     }
 
-    public DoctorDTO toDoctorDTO(Doctor doctor) {
-        DoctorDTO dto = new DoctorDTO();
-        dto.setDoctorNationalId(doctor.getDoctorNationalId());
+    public DoctorInfoDTO toDoctorInfoDTO(Doctor doctor) {
+        DoctorInfoDTO dto = new DoctorInfoDTO();
+        dto.setNationalId(String.valueOf(doctor.getDoctorNationalId()));
         dto.setFirstName(doctor.getFirstName());
         dto.setLastName(doctor.getLastName());
-        dto.setHospital(doctor.getHospital());
-        dto.setDepartment(doctor.getDepartment());
+        dto.setHospitalName(doctor.getHospital().getName());
+        dto.setDepartmentName(doctor.getDepartment().getBranchName());
         return dto;
     }
 }

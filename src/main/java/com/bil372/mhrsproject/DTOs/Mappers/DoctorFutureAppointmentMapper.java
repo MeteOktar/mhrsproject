@@ -25,7 +25,7 @@ public class DoctorFutureAppointmentMapper {
 
         // Cancelled status
         String status = slot.getStatus();
-        dto.setCancelled(status != null && status.equalsIgnoreCase("CANCELLED"));
+        dto.setStatus(status);
 
         return dto;
     }

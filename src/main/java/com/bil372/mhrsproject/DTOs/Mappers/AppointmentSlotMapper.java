@@ -9,6 +9,7 @@ import com.bil372.mhrsproject.entities.Doctor;
 import com.bil372.mhrsproject.entities.Hospital;
 import com.bil372.mhrsproject.entities.HospitalDepartment;
 import com.bil372.mhrsproject.entities.Patient;
+import com.bil372.mhrsproject.entities.Prescription;
 
 public class AppointmentSlotMapper {
 
@@ -16,7 +17,7 @@ public class AppointmentSlotMapper {
         ASlotDTO dto = new ASlotDTO();
 
         // Slot
-        dto.setAppointmentId(slot.getAppointmentId());
+        dto.setId(slot.getAppointmentId());
         dto.setSlotDateTime(slot.getSlotDateTime());
         dto.setStatus(slot.getStatus());
 
@@ -51,6 +52,17 @@ public class AppointmentSlotMapper {
             dto.setPatientLastName(patient.getLastName());
         }
 
+         List<Prescription> prescriptions = slot.getAppointmentPrescriptions();
+        if (prescriptions != null && !prescriptions.isEmpty()) {
+            Prescription p = prescriptions.get(0);
+            String drugsText = p.getPrescribedDrugs()
+            .stream()
+            .map(d -> d.getDrugName() + " - " + d.getDosage())
+            .collect(Collectors.joining(", "));
+            dto.setPrescriptionText(p.getDiagnosis() + ". \n Yazılan İlaçlar: \n" + drugsText + "\n"+ p.getNotes());
+        } else {
+            dto.setPrescriptionText("");
+        }
         return dto;
     }
 

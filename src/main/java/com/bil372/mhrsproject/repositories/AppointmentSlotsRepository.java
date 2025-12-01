@@ -46,5 +46,10 @@ public interface AppointmentSlotsRepository extends JpaRepository<AppointmentSlo
     LocalDateTime slotDateTime
     );
 
-    
+    List<AppointmentSlot> findByPatient_PatientNationalIdAndSlotDateTimeBefore(long patientNationalId,
+            LocalDateTime now);
+
+    List<AppointmentSlot> findByPatient_PatientNationalIdAndSlotDateTimeAfter(long patientNationalId,
+            LocalDateTime now);
+
 }

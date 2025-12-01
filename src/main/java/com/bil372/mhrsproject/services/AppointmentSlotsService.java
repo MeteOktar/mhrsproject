@@ -34,8 +34,13 @@ public class AppointmentSlotsService {
         return aSlots;
     }
 
-    public List<AppointmentSlot> getPatientAppointmentSlots(long patientNationalId){
-        List<AppointmentSlot> aSlots = aSlotsRepository.findByPatient_PatientNationalId(patientNationalId);
+    public List<AppointmentSlot> getPatientPastAppointmentSlots(long patientNationalId){
+        List<AppointmentSlot> aSlots = aSlotsRepository.findByPatient_PatientNationalIdAndSlotDateTimeBefore(patientNationalId, LocalDateTime.now());
+        return aSlots;
+    }
+
+    public List<AppointmentSlot> getPatientFutureAppointmentSlots(long patientNationalId){
+        List<AppointmentSlot> aSlots = aSlotsRepository.findByPatient_PatientNationalIdAndSlotDateTimeAfter(patientNationalId, LocalDateTime.now());
         return aSlots;
     }
 
@@ -47,5 +52,23 @@ public class AppointmentSlotsService {
     public List<AppointmentSlot> getHospitalAndDepartmentAndSlotDateTime(Hospital hospital,  HospitalDepartment hospitalDepartment, LocalDateTime dateTime){
         List<AppointmentSlot> aSlots = aSlotsRepository.findByHospitalAndDepartmentAndSlotDateTime(hospital, hospitalDepartment, dateTime);
         return aSlots;
+    }
+
+    public void cancelAppointmentByDoctor(int appointmentId) {
+        AppointmentSlot slot = aSlotsRepository
+                .findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        slot.setStatus("CANCELLED_BY_DOCTOR"); 
+        aSlotsRepository.save(slot);
+    }
+
+    public void cancelAppointmentByPatient(int appointmentId){
+        AppointmentSlot slot = aSlotsRepository
+                                .findById(appointmentId)
+                                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        slot.setStatus("CANCELLED_BY_PATIENT");
+        aSlotsRepository.save(slot);
     }
 }

@@ -7,6 +7,7 @@ import com.bil372.mhrsproject.DTOs.DoctorPastAppointmentDTO;
 import com.bil372.mhrsproject.entities.AppointmentSlot;
 import com.bil372.mhrsproject.entities.Patient;
 import com.bil372.mhrsproject.entities.Prescription;
+import com.bil372.mhrsproject.entities.PrescriptionDrugs;
 
 public class DoctorPastAppointmentMapper {
 
@@ -28,7 +29,11 @@ public class DoctorPastAppointmentMapper {
         List<Prescription> prescriptions = slot.getAppointmentPrescriptions();
         if (prescriptions != null && !prescriptions.isEmpty()) {
             Prescription p = prescriptions.get(0);
-            dto.setPrescriptionText(p.getDiagnosis() + "\n" + p.getNotes());  // field name neyse onu yaz
+            String drugsText = p.getPrescribedDrugs()
+            .stream()
+            .map(d -> d.getDrugName() + " - " + d.getDosage())
+            .collect(Collectors.joining(", "));
+            dto.setPrescriptionText(p.getDiagnosis() + ". \n Yazılan İlaçlar: \n" + drugsText + "\n"+ p.getNotes());
         } else {
             dto.setPrescriptionText("");
         }

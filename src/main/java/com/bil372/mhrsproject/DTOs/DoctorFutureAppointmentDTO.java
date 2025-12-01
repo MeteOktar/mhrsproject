@@ -12,5 +12,5 @@ public class DoctorFutureAppointmentDTO {
     private String patientFirstName;
     private String patientLastName;
 
-    private boolean isCancelled;         // status == CANCELLED
+    private String status;         // status == CANCELLED
 }

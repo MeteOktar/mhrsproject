@@ -8,7 +8,7 @@ import lombok.Data;
 public class ASlotDTO {
 
     // AppointmentSlot
-    private int appointmentId;
+    private int id;
     private LocalDateTime slotDateTime;
     private String status;
 
@@ -33,4 +33,6 @@ public class ASlotDTO {
 
     // OPTIONAL prescription info (nullable)
     private Integer prescriptionId;
+    private String prescriptionText;
+
 }

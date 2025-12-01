@@ -2,19 +2,20 @@ package com.bil372.mhrsproject.controllers;
 
 import java.util.List;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bil372.mhrsproject.DTOs.ASlotDTO;
 import com.bil372.mhrsproject.DTOs.DoctorDTO;
 import com.bil372.mhrsproject.DTOs.DoctorFutureAppointmentDTO;
+import com.bil372.mhrsproject.DTOs.DoctorInfoDTO;
 import com.bil372.mhrsproject.DTOs.DoctorPastAppointmentDTO;
 import com.bil372.mhrsproject.DTOs.PrescriptionsDTO;
 import com.bil372.mhrsproject.DTOs.WaitingListDTO;
-import com.bil372.mhrsproject.DTOs.Mappers.AppointmentSlotMapper;
 import com.bil372.mhrsproject.DTOs.Mappers.DoctorFutureAppointmentMapper;
 import com.bil372.mhrsproject.DTOs.Mappers.DoctorPastAppointmentMapper;
 import com.bil372.mhrsproject.DTOs.Mappers.PrescriptionMapper;
@@ -73,11 +74,16 @@ public class DoctorController {
     }
 
     @GetMapping("/info")
-    public DoctorDTO getDoctorDTO(@AuthenticationPrincipal MyUserDetails user) {
+    public DoctorInfoDTO getDoctorInfoDTO(@AuthenticationPrincipal MyUserDetails user) {
         Doctor doctor = doctorService.getDoctorByNational(user.getNationalId());
-        DoctorDTO doctorDTO = doctorService.toDoctorDTO(doctor);
+        DoctorInfoDTO doctorDTO = doctorService.toDoctorInfoDTO(doctor);
         return doctorDTO;
     }
     
+    @PostMapping("/appointments/{appointmentId}/cancel")
+    public ResponseEntity<Void> cancelAppointment(@PathVariable int appointmentId) {
+        appointmentSlotsService.cancelAppointmentByDoctor(appointmentId);
+        return ResponseEntity.ok().build();
+    }
 }
 

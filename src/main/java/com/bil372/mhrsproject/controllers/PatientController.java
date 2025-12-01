@@ -2,9 +2,12 @@ package com.bil372.mhrsproject.controllers;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +25,8 @@ import com.bil372.mhrsproject.services.PatientService;
 import com.bil372.mhrsproject.services.PrescriptionsService;
 import com.bil372.mhrsproject.services.WaitingListService;
 import com.bil372.mhrsproject.services.security.MyUserDetails;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/patient")
@@ -60,13 +65,24 @@ public class PatientController {
         return pDto;
     }
 
-    @GetMapping("/appointments")
-    public List<ASlotDTO> getPatientAppointmentSlots(@AuthenticationPrincipal MyUserDetails user) {
+    @GetMapping("/past-appointments")
+    public List<ASlotDTO> getPatientPastAppointmentSlots(@AuthenticationPrincipal MyUserDetails user) {
         long patientNationalId = user.getNationalId();
-        List<AppointmentSlot> slots = appointmentSlotsService.getPatientAppointmentSlots(patientNationalId);
+        List<AppointmentSlot> slots = appointmentSlotsService.getPatientPastAppointmentSlots(patientNationalId);
+        return AppointmentSlotMapper.toASlotDTOList(slots);
+    }
+    @GetMapping("/future-appointments")
+    public List<ASlotDTO> getPatientFutureAppointmentSlots(@AuthenticationPrincipal MyUserDetails user) {
+        long patientNationalId = user.getNationalId();
+        List<AppointmentSlot> slots = appointmentSlotsService.getPatientFutureAppointmentSlots(patientNationalId);
         return AppointmentSlotMapper.toASlotDTOList(slots);
     }
     
+    @PostMapping("/appointments/{appointmentId}/cancel")
+    public ResponseEntity<Void> cancelAppointment(@PathVariable int appointmentId) {
+        appointmentSlotsService.cancelAppointmentByPatient(appointmentId);
+        return ResponseEntity.ok().build();
+    }
 
 }
 
