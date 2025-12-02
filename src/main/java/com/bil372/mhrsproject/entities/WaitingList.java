@@ -5,19 +5,30 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Data
-@Table(name= "waiting_list")
+@Table(name= "waiting_list",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uq_waiting_patient_doctor",
+            columnNames = { "patientNationalId", "doctorNationalId", "level","hospitalId", "departmentId" }
+        )
+    }
+)
 @Entity
 public class WaitingList {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "waitingId")
-    private int waitingId;
+    private Integer waitingId;
 
     @Column(name = "level")
     private String level;

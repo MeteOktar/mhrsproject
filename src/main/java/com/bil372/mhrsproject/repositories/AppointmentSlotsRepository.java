@@ -60,5 +60,6 @@ public interface AppointmentSlotsRepository extends JpaRepository<AppointmentSlo
         List<String> statuses
     );
 
+    boolean existsByDoctor_DoctorNationalIdAndPatient_PatientNationalIdAndStatusIn(long doctorNationalId, long patientNationalId, List<String> status);
 
 }

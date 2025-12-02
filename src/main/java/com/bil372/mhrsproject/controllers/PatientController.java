@@ -88,6 +88,13 @@ public class PatientController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/waiting-lists/{waitingId}/cancel")
+    public ResponseEntity<Void> cancelWaitingList(@PathVariable int waitingId) {
+        waitingListService.cancelWaitingListByPatient(waitingId);
+        return ResponseEntity.ok().build();
+    }
+    
+
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public PatientDTO register(@RequestBody PatientRegisterRequest req) {

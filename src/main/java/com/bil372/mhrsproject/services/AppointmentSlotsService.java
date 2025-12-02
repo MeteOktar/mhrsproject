@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.stereotype.Service;
 
 import com.bil372.mhrsproject.entities.AppointmentSlot;
@@ -84,13 +86,15 @@ public class AppointmentSlotsService {
         AppointmentSlot slot = aSlotsRepository
                                 .findById(appointmentId)
                                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
-
+        slot.setPatient(null);
         slot.setStatus("CANCELLED_BY_PATIENT");
         aSlotsRepository.save(slot);
     }
 
     @Transactional
     public void bookAppointment(int appointmentId, long patientNationalId) {
+
+
         AppointmentSlot slot = aSlotsRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment slot not found"));
 
@@ -98,6 +102,14 @@ public class AppointmentSlotsService {
             throw new RuntimeException("Lütfen gelecek bir tarih seçin");
         }
 
+        boolean alreadyHasActive = aSlotsRepository.existsByDoctor_DoctorNationalIdAndPatient_PatientNationalIdAndStatusIn(slot.getDoctor().getDoctorNationalId(), 
+        patientNationalId, 
+        List.of("booked")
+        );
+
+        if(alreadyHasActive){
+            throw new RuntimeException("Bu doktor için zaten randevunuz var");
+        }
         // Dolmuş slotu tekrar alma
         if (slot.getStatus().equals("booked")) {
             throw new RuntimeException("Appointment slot is not available");

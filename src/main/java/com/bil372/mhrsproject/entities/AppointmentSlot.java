@@ -15,10 +15,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Data
-@Table(name = "appointment_slots")
+@Table(name = "appointment_slots",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uq_doctor_patient_slot",
+            columnNames = {"doctorNationalId", "patientNationalId", "slotDateTime"}
+        )
+    }
+)
 @Entity
 public class AppointmentSlot {
     @Id

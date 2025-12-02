@@ -20,6 +20,10 @@ public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
     //o sehirdeki ve ilcedeki tum hastaneler
     List<Hospital> findByCityAndDistrict(String city, String district);
 
+    Hospital findFirstByHospitalDoctors_DoctorNationalId(long doctorNationalId);
+
+    Hospital findFirstByHospitalDepartments_DepartmentId(int departmentId);
+
     @Query("SELECT DISTINCT h.city FROM Hospital h ORDER BY h.city ASC")
     List<String> findAllCities();
 
