@@ -28,11 +28,18 @@ public class AppointmentSlotsService {
     }
 
     public List<AppointmentSlot> getSlotsByDoctorAndDate(long doctorNationalId, LocalDate date) {
-        LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-        return aSlotsRepository
-                .findByDoctor_DoctorNationalIdAndSlotDateTimeBetween(doctorNationalId, startOfDay, endOfDay);
+    LocalDateTime startOfDay = date.atStartOfDay();
+    LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+
+    return aSlotsRepository
+            .findByDoctor_DoctorNationalIdAndSlotDateTimeBetweenAndStatusIn(
+                    doctorNationalId,
+                    startOfDay,
+                    endOfDay,
+                    List.of("empty", "booked","cancelled","CANCELLED_BY_DOCTOR","CANCELLED_BY_PATIENT")
+            );
     }
+
 
     public List<AppointmentSlot> getDoctorPastAppointmentSlots(long doctorNationalId){
         List<AppointmentSlot> aSlots = aSlotsRepository.findByDoctor_DoctorNationalIdAndSlotDateTimeBefore(doctorNationalId, LocalDateTime.now());
