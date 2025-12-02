@@ -1,6 +1,8 @@
 package com.bil372.mhrsproject.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,20 +10,28 @@ import org.springframework.stereotype.Service;
 import com.bil372.mhrsproject.entities.AppointmentSlot;
 import com.bil372.mhrsproject.entities.Hospital;
 import com.bil372.mhrsproject.entities.HospitalDepartment;
+import com.bil372.mhrsproject.entities.Patient;
 import com.bil372.mhrsproject.repositories.AppointmentSlotsRepository;
+import com.bil372.mhrsproject.repositories.PatientRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AppointmentSlotsService {
     
     private final AppointmentSlotsRepository aSlotsRepository;
+    private final PatientRepository patientRepository;
 
-    public AppointmentSlotsService(AppointmentSlotsRepository aSlotsRepository){
+    public AppointmentSlotsService(AppointmentSlotsRepository aSlotsRepository, PatientRepository patientRepository){
         this.aSlotsRepository = aSlotsRepository;
+        this.patientRepository = patientRepository;
     }
 
-    public List<AppointmentSlot> getDoctorAppointmentSlots(long doctorNationalId){
-        List<AppointmentSlot> aSlots = aSlotsRepository.findByDoctor_DoctorNationalId(doctorNationalId);
-        return aSlots;
+    public List<AppointmentSlot> getSlotsByDoctorAndDate(long doctorNationalId, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return aSlotsRepository
+                .findByDoctor_DoctorNationalIdAndSlotDateTimeBetween(doctorNationalId, startOfDay, endOfDay);
     }
 
     public List<AppointmentSlot> getDoctorPastAppointmentSlots(long doctorNationalId){
@@ -71,4 +81,24 @@ public class AppointmentSlotsService {
         slot.setStatus("CANCELLED_BY_PATIENT");
         aSlotsRepository.save(slot);
     }
+
+    @Transactional
+    public void bookAppointment(int appointmentId, long patientNationalId) {
+        AppointmentSlot slot = aSlotsRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment slot not found"));
+
+        // Dolmuş slotu tekrar alma
+        if (slot.getStatus().equals("booked")) {
+            throw new RuntimeException("Appointment slot is not available");
+        }
+
+        Patient patient = patientRepository.findByPatientNationalId(patientNationalId)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        slot.setPatient(patient); 
+        slot.setStatus("booked");
+
+        aSlotsRepository.save(slot);
+    }
+
 }

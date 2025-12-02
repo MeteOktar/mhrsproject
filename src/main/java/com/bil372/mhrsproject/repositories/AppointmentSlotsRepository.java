@@ -1,5 +1,6 @@
 package com.bil372.mhrsproject.repositories;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,5 +52,11 @@ public interface AppointmentSlotsRepository extends JpaRepository<AppointmentSlo
 
     List<AppointmentSlot> findByPatient_PatientNationalIdAndSlotDateTimeAfter(long patientNationalId,
             LocalDateTime now);
+
+    List<AppointmentSlot> findByDoctor_DoctorNationalIdAndSlotDateTimeBetween(
+            long doctorNationalId,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 
 }

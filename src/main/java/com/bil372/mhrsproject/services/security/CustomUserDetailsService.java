@@ -41,7 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService{
             if (doctorOpt.isPresent()) {
                 Doctor d = doctorOpt.get();
                 return new MyUserDetails(d.getDoctorNationalId(), 
-                                        d.getPassword(), 
+                                        d.getPasswordHash(), 
                                         List.of(new SimpleGrantedAuthority("ROLE_DOCTOR"))
                 );
             }
@@ -52,7 +52,7 @@ public class CustomUserDetailsService implements UserDetailsService{
                 Patient p = patientOpt.get();
                 return new MyUserDetails(
                         p.getPatientNationalId(),
-                        p.getPassword(),
+                        p.getPasswordHash(),
                         List.of(new SimpleGrantedAuthority("ROLE_PATIENT"))
                 );
             }
@@ -67,7 +67,7 @@ public class CustomUserDetailsService implements UserDetailsService{
             Admin a = adminOpt.get();
             return User.builder()
                     .username(a.getUsername())
-                    .password(a.getPassword())
+                    .password(a.getPasswordHash())
                     .roles("ADMIN")
                     .build();
         } 

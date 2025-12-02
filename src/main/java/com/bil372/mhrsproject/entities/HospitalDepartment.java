@@ -21,6 +21,7 @@ public class HospitalDepartment {
 
     @ManyToOne
     @JoinColumn(name = "hospitalId")
+    @JsonIgnore
     private Hospital hospital;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)

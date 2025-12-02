@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,8 +40,14 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
-                                "/swagger-ui/**"
+                                "/swagger-ui/**",
+                                "/api/patient/register",
+                                "/api/hospital/**",
+                                "/api/department/**",
+                                "/api/doctor/by-department", 
+                                "/api/doctor/slots"
                         ).permitAll()
+                        .requestMatchers("/api/patient/appointments/**").hasRole("PATIENT")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -64,15 +69,9 @@ public class SecurityConfig {
         return source;
     }
 
-    /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }*/
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
 }

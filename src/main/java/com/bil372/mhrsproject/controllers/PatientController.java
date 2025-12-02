@@ -2,17 +2,20 @@ package com.bil372.mhrsproject.controllers;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bil372.mhrsproject.DTOs.ASlotDTO;
 import com.bil372.mhrsproject.DTOs.PatientDTO;
+import com.bil372.mhrsproject.DTOs.PatientRegisterRequest;
 import com.bil372.mhrsproject.DTOs.PrescriptionsDTO;
 import com.bil372.mhrsproject.DTOs.WaitingListDTO;
 import com.bil372.mhrsproject.DTOs.Mappers.AppointmentSlotMapper;
@@ -26,6 +29,7 @@ import com.bil372.mhrsproject.services.PrescriptionsService;
 import com.bil372.mhrsproject.services.WaitingListService;
 import com.bil372.mhrsproject.services.security.MyUserDetails;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @RestController
@@ -84,5 +88,20 @@ public class PatientController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PatientDTO register(@RequestBody PatientRegisterRequest req) {
+        return patientService.register(req);
+    }
+
+     @PostMapping("/appointments/{appointmentId}/book")
+    public ResponseEntity<Void> bookAppointment(
+            @PathVariable int appointmentId,
+            @AuthenticationPrincipal MyUserDetails user
+    ) {
+        long patientNationalId = user.getNationalId();
+        appointmentSlotsService.bookAppointment(appointmentId, patientNationalId);
+        return ResponseEntity.ok().build();
+    }
 }
 

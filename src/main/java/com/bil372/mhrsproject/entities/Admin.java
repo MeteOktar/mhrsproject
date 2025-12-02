@@ -15,13 +15,13 @@ public class Admin {
     @Column(name = "username")
     private String username;   // admin usernamde
 
-    @Column(name = "password")
-    private String password;   // simdilik hashlenmedi
+    @Column(name = "passwordHash")
+    private String passwordHash;   // simdilik hashlenmedi
 
     public Admin() {}
 
     public Admin(String username, String password) {
         this.username = username;
-        this.password = password;
+        this.passwordHash = password;
     }
 }

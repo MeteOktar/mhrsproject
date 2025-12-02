@@ -20,8 +20,8 @@ public class Patient {
     @Column(name = "nationalId")
     private long patientNationalId;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "passwordHash", nullable = false)
+    private String passwordHash;
 
     @Column(name = "firstName")
     private String firstName;
@@ -49,4 +49,5 @@ public class Patient {
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Prescription> patientPrescriptions;
+
 }

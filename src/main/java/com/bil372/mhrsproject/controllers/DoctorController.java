@@ -1,19 +1,22 @@
 package com.bil372.mhrsproject.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.bil372.mhrsproject.DTOs.DoctorDTO;
 import com.bil372.mhrsproject.DTOs.DoctorFutureAppointmentDTO;
 import com.bil372.mhrsproject.DTOs.DoctorInfoDTO;
+import com.bil372.mhrsproject.DTOs.DoctorListDTO;
 import com.bil372.mhrsproject.DTOs.DoctorPastAppointmentDTO;
+import com.bil372.mhrsproject.DTOs.DoctorSlotDTO;
 import com.bil372.mhrsproject.DTOs.PrescriptionsDTO;
 import com.bil372.mhrsproject.DTOs.WaitingListDTO;
 import com.bil372.mhrsproject.DTOs.Mappers.DoctorFutureAppointmentMapper;
@@ -84,6 +87,38 @@ public class DoctorController {
     public ResponseEntity<Void> cancelAppointment(@PathVariable int appointmentId) {
         appointmentSlotsService.cancelAppointmentByDoctor(appointmentId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/by-department")
+    public List<DoctorListDTO> getDoctorsByDepartment(@RequestParam int departmentId) {
+        List<Doctor> doctors = doctorService.getDoctorsByDepartment(departmentId);
+
+        return doctors.stream()
+                .map(d -> new DoctorListDTO(
+                        d.getDoctorNationalId(),
+                        d.getFirstName(),
+                        d.getLastName(),
+                        d.getDepartment().getDepartmentId(),
+                        d.getHospital().getHospitalId()
+                ))
+                .toList();
+    }
+
+    @GetMapping("/slots")
+    public List<DoctorSlotDTO> getDoctorSlots(
+            @RequestParam long doctorNationalId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        List<AppointmentSlot> slots =
+                appointmentSlotsService.getSlotsByDoctorAndDate(doctorNationalId, date);
+
+        return slots.stream()
+                .map(s -> new DoctorSlotDTO(
+                        s.getAppointmentId(),
+                        s.getSlotDateTime(),
+                        s.getStatus()
+                ))
+                .toList();
     }
 }
 

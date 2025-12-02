@@ -12,4 +12,6 @@ public interface HospitalDepartmentRepository extends JpaRepository<HospitalDepa
     List<HospitalDepartment> findByHospital(Hospital hospital);
 
     HospitalDepartment findByBranchName(String branchName);
+
+    List<HospitalDepartment> findByHospital_HospitalId(int hospitalId);
 }

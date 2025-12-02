@@ -18,5 +18,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     // Departmana göre doktor listesi
     List<Doctor> findByHospitalAndDepartment(Hospital hospital,HospitalDepartment department);
+
+    List<Doctor> findByDepartment_DepartmentId(int departmentId);
 }
 

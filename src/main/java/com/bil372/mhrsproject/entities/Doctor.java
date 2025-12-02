@@ -23,8 +23,8 @@ public class Doctor {
     @Column(name = "doctorNationalId")
     private long doctorNationalId;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "passwordHash", nullable = false)
+    private String passwordHash;
 
     @Column(name = "firstName")
     private String firstName;

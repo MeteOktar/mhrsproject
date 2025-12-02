@@ -47,7 +47,7 @@ public class AuthService {
                     .findByPatientNationalId(request.getNationalId())
                     .orElseThrow(() -> new RuntimeException("Patient not found"));
 
-            if (!passwordEncoder.matches(request.getPassword(), patient.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), patient.getPasswordHash())) {
                 throw new RuntimeException("Invalid credentials");
             }
 
@@ -74,7 +74,7 @@ public class AuthService {
                     .findByDoctorNationalId(request.getNationalId())
                     .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-            if (!passwordEncoder.matches(request.getPassword(), doctor.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), doctor.getPasswordHash())) {
                 throw new RuntimeException("Invalid credentials");
             }
 
@@ -101,7 +101,7 @@ public class AuthService {
                     .findByUsername(request.getUsername())
                     .orElseThrow(() -> new RuntimeException("Admin not found"));
 
-            if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), admin.getPasswordHash())) {
                 throw new RuntimeException("Invalid credentials");
             }
 

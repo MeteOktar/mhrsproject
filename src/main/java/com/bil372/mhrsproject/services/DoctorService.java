@@ -1,5 +1,7 @@
 package com.bil372.mhrsproject.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.bil372.mhrsproject.DTOs.DoctorDTO;
@@ -28,5 +30,9 @@ public class DoctorService {
         dto.setHospitalName(doctor.getHospital().getName());
         dto.setDepartmentName(doctor.getDepartment().getBranchName());
         return dto;
+    }
+
+    public List<Doctor> getDoctorsByDepartment(int departmentId) {
+        return doctorRepository.findByDepartment_DepartmentId(departmentId);
     }
 }
