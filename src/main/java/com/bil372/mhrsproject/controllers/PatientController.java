@@ -94,7 +94,7 @@ public class PatientController {
         return patientService.register(req);
     }
 
-     @PostMapping("/appointments/{appointmentId}/book")
+    @PostMapping("/appointments/{appointmentId}/book")
     public ResponseEntity<Void> bookAppointment(
             @PathVariable int appointmentId,
             @AuthenticationPrincipal MyUserDetails user

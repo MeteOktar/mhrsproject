@@ -36,7 +36,7 @@ public class AppointmentSlotsService {
                     doctorNationalId,
                     startOfDay,
                     endOfDay,
-                    List.of("empty", "booked","cancelled","CANCELLED_BY_DOCTOR","CANCELLED_BY_PATIENT")
+                    List.of("free", "booked","cancelled","CANCELLED_BY_DOCTOR","CANCELLED_BY_PATIENT")
             );
     }
 
@@ -93,6 +93,10 @@ public class AppointmentSlotsService {
     public void bookAppointment(int appointmentId, long patientNationalId) {
         AppointmentSlot slot = aSlotsRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment slot not found"));
+
+        if(slot.getSlotDateTime().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Lütfen gelecek bir tarih seçin");
+        }
 
         // Dolmuş slotu tekrar alma
         if (slot.getStatus().equals("booked")) {
