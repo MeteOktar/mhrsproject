@@ -49,6 +49,13 @@ public class WaitingListService {
         waitingListRepository.deleteById(waitingId);
     }
 
+    public void cancelWaitingListByDoctor(int waitingId) {
+        if (!waitingListRepository.existsById(waitingId)) {
+            throw new RuntimeException("couldnt find wlist");
+        }
+        waitingListRepository.deleteById(waitingId);
+    }
+
     public void cancelWaitingListByAdmin(int waitingId){
         if (!waitingListRepository.existsById(waitingId)) {
             throw new RuntimeException("couldnt find wlist");

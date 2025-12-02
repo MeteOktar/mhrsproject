@@ -50,9 +50,15 @@ public class DoctorController {
     }
 
     @GetMapping("/waiting-list")
-    public List<WaitingListDTO> getMyWaitingList(@AuthenticationPrincipal MyUserDetails user) {
+    public List<WaitingListDTO> getDoctorWaitingList(@AuthenticationPrincipal MyUserDetails user) {
         long doctorNationalId = user.getNationalId();
         return waitingListService.getDoctorWaitingList(doctorNationalId);
+    }
+
+    @PostMapping("/waiting-lists/{waitingId}/cancel")
+    public ResponseEntity<Void> cancelWaitingList(@PathVariable int waitingId) {
+        waitingListService.cancelWaitingListByDoctor(waitingId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/prescriptions")
