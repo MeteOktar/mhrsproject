@@ -22,7 +22,9 @@ public class WaitingListService {
     private final PatientRepository patientRepository;
     private final HospitalDepartmentRepository hospitalDepartmentRepository;
 
-    public WaitingListService(WaitingListRepository waitingListRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, HospitalDepartmentRepository hospitalDepartmentRepository, HospitalRepository hospitalRepository){
+    public WaitingListService(WaitingListRepository waitingListRepository, DoctorRepository doctorRepository,
+            PatientRepository patientRepository, HospitalDepartmentRepository hospitalDepartmentRepository,
+            HospitalRepository hospitalRepository) {
         this.waitingListRepository = waitingListRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
@@ -30,14 +32,16 @@ public class WaitingListService {
         this.hospitalRepository = hospitalRepository;
     }
 
-    public List<WaitingListDTO> getDoctorWaitingList(long doctorNationalId){
-        Doctor doctor = doctorRepository.findByDoctorNationalId(doctorNationalId).orElseThrow(() -> new RuntimeException("Doctor not found"));
+    public List<WaitingListDTO> getDoctorWaitingList(long doctorNationalId) {
+        Doctor doctor = doctorRepository.findByDoctorNationalId(doctorNationalId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
         List<WaitingList> result = waitingListRepository.findByDoctor(doctor);
         return result.stream().map(this::waitinglistDTOMapper).toList();
     }
 
-    public List<WaitingListDTO> getPatientWaitingList(long patientNationalId){
-        Patient patient = patientRepository.findByPatientNationalId(patientNationalId).orElseThrow(() -> new RuntimeException("Patient not found"));
+    public List<WaitingListDTO> getPatientWaitingList(long patientNationalId) {
+        Patient patient = patientRepository.findByPatientNationalId(patientNationalId)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
         List<WaitingList> result = waitingListRepository.findByPatient(patient);
         return result.stream().map(this::waitinglistDTOMapper).toList();
     }
@@ -56,7 +60,7 @@ public class WaitingListService {
         waitingListRepository.deleteById(waitingId);
     }
 
-    public void cancelWaitingListByAdmin(int waitingId){
+    public void cancelWaitingListByAdmin(int waitingId) {
         if (!waitingListRepository.existsById(waitingId)) {
             throw new RuntimeException("couldnt find wlist");
         }
@@ -68,7 +72,7 @@ public class WaitingListService {
         return result.stream().map(this::waitinglistDTOMapper).toList();
     }
 
-    private WaitingListDTO waitinglistDTOMapper(WaitingList w){
+    private WaitingListDTO waitinglistDTOMapper(WaitingList w) {
 
         String doctorName = null;
         if (w.getDoctor() != null) {
@@ -90,26 +94,30 @@ public class WaitingListService {
                 hospitalName,
                 departmentName,
                 patientName,
-                w.getRequestDateTime()
-        );
+                w.getPatient() != null ? w.getPatient().getPatientNationalId() : null,
+                w.getRequestDateTime());
     }
 
-     public void joinDoctorWaitingList(long patientNationalId, long doctorId) {
+    public void joinDoctorWaitingList(long patientNationalId, long doctorId) {
 
         if (waitingListRepository
-            .existsByPatient_PatientNationalIdAndDoctor_DoctorNationalIdAndLevel(
-                patientNationalId, doctorId, "doctor")) {
-        throw new RuntimeException("Bu doktor için zaten bekleme listesinde kaydınız var.");
+                .existsByPatient_PatientNationalIdAndDoctor_DoctorNationalIdAndLevel(
+                        patientNationalId, doctorId, "doctor")) {
+            throw new RuntimeException("Bu doktor için zaten bekleme listesinde kaydınız var.");
         }
 
         WaitingList entry = new WaitingList();
-        entry.setPatient((patientRepository.findByPatientNationalId(patientNationalId)).orElseThrow(() -> new RuntimeException("Patient not found")));
-        Doctor doctor = (doctorRepository.findByDoctorNationalId(doctorId)).orElseThrow(() -> new RuntimeException("Doctor not found"));
+        entry.setPatient((patientRepository.findByPatientNationalId(patientNationalId))
+                .orElseThrow(() -> new RuntimeException("Patient not found")));
+        Doctor doctor = (doctorRepository.findByDoctorNationalId(doctorId))
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
         entry.setDoctor(doctor);
         entry.setRequestDateTime(LocalDateTime.now());
         entry.setLevel("doctor");
-        Hospital hospital = hospitalRepository.findFirstByHospitalDoctors_DoctorNationalId(doctor.getDoctorNationalId());
-        HospitalDepartment department = hospitalDepartmentRepository.findFirstByDepartmentDoctors_DoctorNationalId(doctor.getDoctorNationalId());
+        Hospital hospital = hospitalRepository
+                .findFirstByHospitalDoctors_DoctorNationalId(doctor.getDoctorNationalId());
+        HospitalDepartment department = hospitalDepartmentRepository
+                .findFirstByDepartmentDoctors_DoctorNationalId(doctor.getDoctorNationalId());
         entry.setHospital(hospital);
         entry.setDepartment(department);
         waitingListRepository.save(entry);
@@ -119,19 +127,19 @@ public class WaitingListService {
 
         Hospital hospital = hospitalRepository.findFirstByHospitalDepartments_DepartmentId(departmentId);
         if (waitingListRepository
-            .existsByPatient_PatientNationalIdAndHospital_HospitalIdAndDepartment_DepartmentIdAndLevel(
-                patientNationalId, hospital.getHospitalId(), departmentId, "department")) {
-        throw new RuntimeException("Bu departman için zaten bekleme listesinde kaydınız var.");
+                .existsByPatient_PatientNationalIdAndHospital_HospitalIdAndDepartment_DepartmentIdAndLevel(
+                        patientNationalId, hospital.getHospitalId(), departmentId, "department")) {
+            throw new RuntimeException("Bu departman için zaten bekleme listesinde kaydınız var.");
         }
 
         WaitingList entry = new WaitingList();
-        entry.setPatient((patientRepository.findByPatientNationalId(patientNationalId)).orElseThrow(() -> new RuntimeException("Patient not found")));
-        entry.setDepartment(hospitalDepartmentRepository.findById(departmentId).orElseThrow(() -> new RuntimeException("Deparment not found")));
+        entry.setPatient((patientRepository.findByPatientNationalId(patientNationalId))
+                .orElseThrow(() -> new RuntimeException("Patient not found")));
+        entry.setDepartment(hospitalDepartmentRepository.findById(departmentId)
+                .orElseThrow(() -> new RuntimeException("Deparment not found")));
         entry.setRequestDateTime(LocalDateTime.now());
         entry.setLevel("department");
         entry.setHospital(hospital);
-
-        
 
         waitingListRepository.save(entry);
     }

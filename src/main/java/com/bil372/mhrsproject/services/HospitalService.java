@@ -21,32 +21,50 @@ public class HospitalService {
     private final HospitalDepartmentRepository departmentRepository;
     private final HospitalRepository hospitalRepository;
 
-    public HospitalService(DoctorRepository doctorRepository, PatientRepository patientRepository, HospitalDepartmentRepository departmentRepository, HospitalRepository hospitalRepository){
+    public HospitalService(DoctorRepository doctorRepository, PatientRepository patientRepository,
+            HospitalDepartmentRepository departmentRepository, HospitalRepository hospitalRepository) {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.departmentRepository = departmentRepository;
         this.hospitalRepository = hospitalRepository;
     }
 
-
     public List<Hospital> getHospitalsByLocation(String city, String district) {
-        if( district == null || district.isBlank() ){ //district yok
+        if (district == null || district.isBlank()) { // district yok
             return hospitalRepository.findByCity(city);
-        }
-        else{
+        } else {
             return hospitalRepository.findByCityAndDistrict(city, district);
         }
     }
-    public List<String> getAllCities(){
+
+    public List<String> getAllCities() {
         return hospitalRepository.findAllCities();
     }
 
-    public List<String> getAllDistrictsInCity(String city){
+    public List<String> getAllDistrictsInCity(String city) {
         return hospitalRepository.findAllDistrictsInCity(city);
     }
 
-
     public List<Hospital> getAllHospitals() {
         return hospitalRepository.findAll();
+    }
+
+    // Admin Methods
+    public List<com.bil372.mhrsproject.DTOs.AdminHospitalDTO> getAllHospitalsAsDTO() {
+        return hospitalRepository.findAll().stream()
+                .map(h -> new com.bil372.mhrsproject.DTOs.AdminHospitalDTO(
+                        String.valueOf(h.getHospitalId()),
+                        h.getName(),
+                        h.getCity()))
+                .toList();
+    }
+
+    public List<com.bil372.mhrsproject.DTOs.AdminDepartmentDTO> getAllDepartmentsAsDTO() {
+        return departmentRepository.findAll().stream()
+                .map(d -> new com.bil372.mhrsproject.DTOs.AdminDepartmentDTO(
+                        String.valueOf(d.getDepartmentId()),
+                        d.getBranchName(),
+                        String.valueOf(d.getHospital().getHospitalId())))
+                .toList();
     }
 }
