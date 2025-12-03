@@ -11,13 +11,13 @@ import com.bil372.mhrsproject.entities.Hospital;
 
 public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
 
-    //hastaneyi id ile bulmak
+    // hastaneyi id ile bulmak
     Optional<Hospital> findByHospitalId(int hospitalId);
 
-    //o sehirdeki tum hastaneler
+    // o sehirdeki tum hastaneler
     List<Hospital> findByCity(String city);
 
-    //o sehirdeki ve ilcedeki tum hastaneler
+    // o sehirdeki ve ilcedeki tum hastaneler
     List<Hospital> findByCityAndDistrict(String city, String district);
 
     Hospital findFirstByHospitalDoctors_DoctorNationalId(long doctorNationalId);
@@ -30,4 +30,6 @@ public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
     @Query("SELECT DISTINCT h.district FROM Hospital h WHERE h.city = :city ORDER BY h.district ASC")
     List<String> findAllDistrictsInCity(@Param("city") String city);
 
+    @Query("SELECT MAX(h.hospitalId) FROM Hospital h")
+    Integer findMaxHospitalId();
 }
