@@ -44,7 +44,24 @@ public class PrescriptionsService {
     }
 
     // Admin Methods
-    public List<com.bil372.mhrsproject.DTOs.PrescriptionsDTO> getAllPrescriptions() {
-        return com.bil372.mhrsproject.DTOs.Mappers.PrescriptionMapper.toDTOList(prescriptionsRepository.findAll());
+    public List<com.bil372.mhrsproject.DTOs.AdminPrescriptionDTO> getAllPrescriptions(int limit) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, limit);
+        return prescriptionsRepository.findAll(pageable).getContent().stream()
+                .map(p -> new com.bil372.mhrsproject.DTOs.AdminPrescriptionDTO(
+                        p.getPrescriptionId(),
+                        p.getPrescriptionDateTime(),
+                        p.getDoctor() != null ? p.getDoctor().getFirstName() + " " + p.getDoctor().getLastName()
+                                : "N/A",
+                        p.getPatient() != null ? p.getPatient().getFirstName() + " " + p.getPatient().getLastName()
+                                : "N/A",
+                        p.getHospital() != null ? p.getHospital().getName() : "N/A",
+                        p.getDepartment() != null ? p.getDepartment().getBranchName() : "N/A",
+                        p.getDiagnosis(),
+                        p.getNotes(),
+                        p.getPrescribedDrugs() != null
+                                ? p.getPrescribedDrugs().stream().map(d -> d.getDrugName() + " (" + d.getDosage() + ")")
+                                        .toList()
+                                : java.util.Collections.emptyList()))
+                .toList();
     }
 }

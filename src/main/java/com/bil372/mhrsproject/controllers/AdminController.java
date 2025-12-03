@@ -15,6 +15,7 @@ import com.bil372.mhrsproject.services.WaitingListService;
 
 @RestController
 @RequestMapping("/api/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final WaitingListService waitingListService;
@@ -47,7 +48,6 @@ public class AdminController {
     }
 
     @GetMapping("/dashboardSummary")
-    @PreAuthorize("hasRole('ADMIN')")
     public AdminDashboardSummaryDTO getAdminDashboardSummaryDTO(Authentication authentication) {
         return adminDashboardService.getSummary();
     }
@@ -88,14 +88,19 @@ public class AdminController {
 
     // Appointment Logs
     @GetMapping("/appointments")
-    public List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> getAllAppointments() {
-        return appointmentSlotsService.getAllAppointments();
+    public List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> getAllAppointments(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String dateFrom,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String dateTo,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String search,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String status) {
+        return appointmentSlotsService.getAllAppointments(dateFrom, dateTo, search, status);
     }
 
     // Prescriptions
     @GetMapping("/prescriptions")
-    public List<com.bil372.mhrsproject.DTOs.PrescriptionsDTO> getAllPrescriptions() {
-        return prescriptionsService.getAllPrescriptions();
+    public List<com.bil372.mhrsproject.DTOs.AdminPrescriptionDTO> getAllPrescriptions(
+            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "2000") int limit) {
+        return prescriptionsService.getAllPrescriptions(limit);
     }
 
     // Admin Users

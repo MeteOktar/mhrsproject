@@ -130,8 +130,40 @@ public class AppointmentSlotsService {
     }
 
     // Admin Methods
-    public java.util.List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> getAllAppointments() {
+    public java.util.List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> getAllAppointments(String dateFrom,
+            String dateTo, String search, String status) {
         return aSlotsRepository.findAll().stream()
+                .filter(s -> {
+                    boolean matches = true;
+                    // Date Filter
+                    if (dateFrom != null && !dateFrom.isBlank()) {
+                        LocalDate from = LocalDate.parse(dateFrom);
+                        if (s.getSlotDateTime().toLocalDate().isBefore(from))
+                            return false;
+                    }
+                    if (dateTo != null && !dateTo.isBlank()) {
+                        LocalDate to = LocalDate.parse(dateTo);
+                        if (s.getSlotDateTime().toLocalDate().isAfter(to))
+                            return false;
+                    }
+                    // Status Filter
+                    if (status != null && !status.isBlank() && !status.equalsIgnoreCase("ALL")) {
+                        if (!s.getStatus().equalsIgnoreCase(status))
+                            return false;
+                    }
+                    // Search Filter (Patient Name or Doctor Name)
+                    if (search != null && !search.isBlank()) {
+                        String lowerSearch = search.toLowerCase();
+                        String patientName = s.getPatient() != null
+                                ? (s.getPatient().getFirstName() + " " + s.getPatient().getLastName()).toLowerCase()
+                                : "";
+                        String doctorName = (s.getDoctor().getFirstName() + " " + s.getDoctor().getLastName())
+                                .toLowerCase();
+                        if (!patientName.contains(lowerSearch) && !doctorName.contains(lowerSearch))
+                            return false;
+                    }
+                    return matches;
+                })
                 .map(s -> new com.bil372.mhrsproject.DTOs.AdminAppointmentDTO(
                         String.valueOf(s.getAppointmentId()),
                         s.getPatient() != null ? s.getPatient().getFirstName() + " " + s.getPatient().getLastName()
