@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,7 +15,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
-@Table(name= "doctors")
+@Table(name = "doctors")
 @Entity
 public class Doctor {
     @Id
@@ -39,7 +38,7 @@ public class Doctor {
     @ManyToOne
     @JoinColumn(name = "departmentId")
     private HospitalDepartment department;
-    
+
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<WaitingList> waitingLists;

@@ -26,7 +26,8 @@ public class AdminDashboardService {
             DoctorRepository doctorRepository,
             PatientRepository patientRepository,
             AppointmentSlotsRepository appointmentSlotsRepository,
-            WaitingListRepository waitingListRepository) {
+            WaitingListRepository waitingListRepository,
+            com.bil372.mhrsproject.repositories.AdminRepository adminRepository) {
 
         this.hospitalRepository = hospitalRepository;
         this.hospitalDepartmentRepository = hospitalDepartmentRepository;
@@ -34,6 +35,7 @@ public class AdminDashboardService {
         this.patientRepository = patientRepository;
         this.appointmentSlotsRepository = appointmentSlotsRepository;
         this.waitingListRepository = waitingListRepository;
+        this.adminRepository = adminRepository;
     }
 
     public AdminDashboardSummaryDTO getSummary() {
@@ -47,5 +49,16 @@ public class AdminDashboardService {
         dto.setTotalActiveAppointments(appointmentSlotsRepository.countByStatus("booked"));
         dto.setTotalWaitingList(waitingListRepository.count());
         return dto;
+    }
+
+    // Admin Methods
+    private final com.bil372.mhrsproject.repositories.AdminRepository adminRepository;
+
+    public java.util.List<com.bil372.mhrsproject.DTOs.AdminUserDTO> getAllAdmins() {
+        return adminRepository.findAll().stream()
+                .map(a -> new com.bil372.mhrsproject.DTOs.AdminUserDTO(
+                        a.getUsername(),
+                        "ADMIN"))
+                .toList();
     }
 }
