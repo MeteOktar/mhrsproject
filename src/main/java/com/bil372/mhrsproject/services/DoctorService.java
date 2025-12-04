@@ -60,7 +60,7 @@ public class DoctorService {
                 .toList();
     }
 
-    public void createDoctor(com.bil372.mhrsproject.DTOs.AdminDoctorDTO dto) {
+    public com.bil372.mhrsproject.DTOs.AdminDoctorDTO createDoctor(com.bil372.mhrsproject.DTOs.AdminDoctorDTO dto) {
         Doctor doctor = new Doctor();
         doctor.setDoctorNationalId(Long.parseLong(dto.getNationalId()));
         doctor.setFirstName(dto.getFirstName());
@@ -79,7 +79,14 @@ public class DoctorService {
                 .orElseThrow(() -> new RuntimeException("Department not found"));
         doctor.setDepartment(department);
 
-        doctorRepository.save(doctor);
+        Doctor saved = doctorRepository.save(doctor);
+        return new com.bil372.mhrsproject.DTOs.AdminDoctorDTO(
+                String.valueOf(saved.getDoctorNationalId()),
+                saved.getFirstName(),
+                saved.getLastName(),
+                String.valueOf(saved.getDoctorNationalId()),
+                String.valueOf(saved.getHospital().getHospitalId()),
+                String.valueOf(saved.getDepartment().getDepartmentId()));
     }
 
     public void deleteDoctor(String id) {

@@ -34,13 +34,14 @@ public class HospitalDepartment {
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<AppointmentSlot>  dAppointmentSlots;
+    private List<AppointmentSlot> dAppointmentSlots;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<WaitingList> dWaitingLists;
 
     @Id
+    @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "departmentId")
     private int departmentId;
 

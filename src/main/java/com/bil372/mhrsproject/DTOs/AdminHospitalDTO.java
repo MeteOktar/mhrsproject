@@ -11,4 +11,5 @@ public class AdminHospitalDTO {
     private String id;
     private String name;
     private String city;
+    private String district;
 }

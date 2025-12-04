@@ -131,8 +131,8 @@ public class AppointmentSlotsService {
 
     // Admin Methods
     public java.util.List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> getAllAppointments(String dateFrom,
-            String dateTo, String search, String status) {
-        return aSlotsRepository.findAll().stream()
+            String dateTo, String search, String status, int page, int size) {
+        List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> all = aSlotsRepository.findAll().stream()
                 .filter(s -> {
                     boolean matches = true;
                     // Date Filter
@@ -172,5 +172,15 @@ public class AppointmentSlotsService {
                         s.getSlotDateTime(),
                         s.getStatus()))
                 .toList();
+
+        // Pagination
+        int start = Math.min(page * size, all.size());
+        int end = Math.min((page + 1) * size, all.size());
+
+        if (start >= all.size()) {
+            return List.of();
+        }
+
+        return all.subList(start, end);
     }
 }

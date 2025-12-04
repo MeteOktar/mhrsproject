@@ -11,6 +11,9 @@ public class AdminPatientDTO {
     private String nationalId;
     private String firstName;
     private String lastName;
-    private String email; // Assuming email exists or will be empty
-    private String phone; // Assuming phone exists or will be empty
+    private String email;
+    private String phone;
+    private String bloodGroup;
+    private int heightCm;
+    private int weightKg;
 }

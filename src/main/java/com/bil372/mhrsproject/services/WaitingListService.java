@@ -144,4 +144,7 @@ public class WaitingListService {
         waitingListRepository.save(entry);
     }
 
+    public void deleteWaitingList(int id) {
+        waitingListRepository.deleteById(id);
+    }
 }

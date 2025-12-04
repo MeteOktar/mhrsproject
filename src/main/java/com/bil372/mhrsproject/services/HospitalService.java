@@ -55,7 +55,8 @@ public class HospitalService {
                 .map(h -> new com.bil372.mhrsproject.DTOs.AdminHospitalDTO(
                         String.valueOf(h.getHospitalId()),
                         h.getName(),
-                        h.getCity()))
+                        h.getCity(),
+                        h.getDistrict()))
                 .toList();
     }
 
@@ -66,5 +67,43 @@ public class HospitalService {
                         d.getBranchName(),
                         String.valueOf(d.getHospital().getHospitalId())))
                 .toList();
+    }
+
+    public com.bil372.mhrsproject.DTOs.AdminHospitalDTO createHospital(
+            com.bil372.mhrsproject.DTOs.AdminHospitalDTO dto) {
+        Hospital hospital = new Hospital();
+        hospital.setName(dto.getName());
+        hospital.setCity(dto.getCity());
+        hospital.setDistrict(dto.getDistrict());
+        Hospital saved = hospitalRepository.save(hospital);
+        return new com.bil372.mhrsproject.DTOs.AdminHospitalDTO(
+                String.valueOf(saved.getHospitalId()),
+                saved.getName(),
+                saved.getCity(),
+                saved.getDistrict());
+    }
+
+    public void deleteHospital(String id) {
+        hospitalRepository.deleteById((int) Long.parseLong(id));
+    }
+
+    public com.bil372.mhrsproject.DTOs.AdminDepartmentDTO createDepartment(
+            com.bil372.mhrsproject.DTOs.AdminDepartmentDTO dto) {
+        com.bil372.mhrsproject.entities.HospitalDepartment department = new com.bil372.mhrsproject.entities.HospitalDepartment();
+        department.setBranchName(dto.getName());
+
+        Hospital hospital = hospitalRepository.findById((int) Long.parseLong(dto.getHospitalId()))
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));
+        department.setHospital(hospital);
+
+        com.bil372.mhrsproject.entities.HospitalDepartment saved = departmentRepository.save(department);
+        return new com.bil372.mhrsproject.DTOs.AdminDepartmentDTO(
+                String.valueOf(saved.getDepartmentId()),
+                saved.getBranchName(),
+                String.valueOf(saved.getHospital().getHospitalId()));
+    }
+
+    public void deleteDepartment(String id) {
+        departmentRepository.deleteById((int) Long.parseLong(id));
     }
 }
