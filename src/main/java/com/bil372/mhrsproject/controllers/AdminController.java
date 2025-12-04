@@ -4,13 +4,30 @@ import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bil372.mhrsproject.DTOs.AdminAppointmentDTO;
 import com.bil372.mhrsproject.DTOs.AdminDashboardSummaryDTO;
+import com.bil372.mhrsproject.DTOs.AdminDepartmentDTO;
+import com.bil372.mhrsproject.DTOs.AdminDoctorDTO;
+import com.bil372.mhrsproject.DTOs.AdminHospitalDTO;
+import com.bil372.mhrsproject.DTOs.AdminPatientDTO;
+import com.bil372.mhrsproject.DTOs.AdminPrescriptionDTO;
+import com.bil372.mhrsproject.DTOs.AdminUserDTO;
 import com.bil372.mhrsproject.DTOs.WaitingListDTO;
 import com.bil372.mhrsproject.services.AdminDashboardService;
+import com.bil372.mhrsproject.services.AppointmentSlotsService;
+import com.bil372.mhrsproject.services.DoctorService;
+import com.bil372.mhrsproject.services.HospitalService;
+import com.bil372.mhrsproject.services.PatientService;
+import com.bil372.mhrsproject.services.PrescriptionsService;
 import com.bil372.mhrsproject.services.WaitingListService;
 
 @RestController
@@ -20,19 +37,19 @@ public class AdminController {
 
     private final WaitingListService waitingListService;
     private final AdminDashboardService adminDashboardService;
-    private final com.bil372.mhrsproject.services.DoctorService doctorService;
-    private final com.bil372.mhrsproject.services.HospitalService hospitalService;
-    private final com.bil372.mhrsproject.services.PatientService patientService;
-    private final com.bil372.mhrsproject.services.AppointmentSlotsService appointmentSlotsService;
-    private final com.bil372.mhrsproject.services.PrescriptionsService prescriptionsService;
+    private final DoctorService doctorService;
+    private final HospitalService hospitalService;
+    private final PatientService patientService;
+    private final AppointmentSlotsService appointmentSlotsService;
+    private final PrescriptionsService prescriptionsService;
 
     public AdminController(WaitingListService waitingListService,
             AdminDashboardService adminDashboardService,
-            com.bil372.mhrsproject.services.DoctorService doctorService,
-            com.bil372.mhrsproject.services.HospitalService hospitalService,
-            com.bil372.mhrsproject.services.PatientService patientService,
-            com.bil372.mhrsproject.services.AppointmentSlotsService appointmentSlotsService,
-            com.bil372.mhrsproject.services.PrescriptionsService prescriptionsService) {
+            DoctorService doctorService,
+            HospitalService hospitalService,
+            PatientService patientService,
+            AppointmentSlotsService appointmentSlotsService,
+            PrescriptionsService prescriptionsService) {
         this.waitingListService = waitingListService;
         this.adminDashboardService = adminDashboardService;
         this.doctorService = doctorService;
@@ -54,114 +71,109 @@ public class AdminController {
 
     // Doctor Management
     @GetMapping("/doctors")
-    public List<com.bil372.mhrsproject.DTOs.AdminDoctorDTO> getAllDoctors() {
+    public List<AdminDoctorDTO> getAllDoctors() {
         return doctorService.getAllDoctors();
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/doctors")
-    public com.bil372.mhrsproject.DTOs.AdminDoctorDTO createDoctor(
-            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminDoctorDTO dto) {
+    @PostMapping("/doctors")
+    public AdminDoctorDTO createDoctor(@RequestBody AdminDoctorDTO dto) {
         return doctorService.createDoctor(dto);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/doctors/{id}")
-    public void deleteDoctor(@org.springframework.web.bind.annotation.PathVariable String id) {
+    @DeleteMapping("/doctors/{id}")
+    public void deleteDoctor(@PathVariable String id) {
         doctorService.deleteDoctor(id);
     }
 
     // Hospital & Department Management
     @GetMapping("/hospitals")
-    public List<com.bil372.mhrsproject.DTOs.AdminHospitalDTO> getAllHospitals() {
+    public List<AdminHospitalDTO> getAllHospitals() {
         return hospitalService.getAllHospitalsAsDTO();
     }
 
     @GetMapping("/departments")
-    public List<com.bil372.mhrsproject.DTOs.AdminDepartmentDTO> getAllDepartments() {
+    public List<AdminDepartmentDTO> getAllDepartments() {
         return hospitalService.getAllDepartmentsAsDTO();
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/hospitals")
-    public com.bil372.mhrsproject.DTOs.AdminHospitalDTO createHospital(
-            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminHospitalDTO dto) {
+    @PostMapping("/hospitals")
+    public AdminHospitalDTO createHospital(@RequestBody AdminHospitalDTO dto) {
         return hospitalService.createHospital(dto);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/hospitals/{id}")
-    public void deleteHospital(@org.springframework.web.bind.annotation.PathVariable String id) {
+    @DeleteMapping("/hospitals/{id}")
+    public void deleteHospital(@PathVariable String id) {
         hospitalService.deleteHospital(id);
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/departments")
-    public com.bil372.mhrsproject.DTOs.AdminDepartmentDTO createDepartment(
-            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminDepartmentDTO dto) {
+    @PostMapping("/departments")
+    public AdminDepartmentDTO createDepartment(@RequestBody AdminDepartmentDTO dto) {
         return hospitalService.createDepartment(dto);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/departments/{id}")
-    public void deleteDepartment(@org.springframework.web.bind.annotation.PathVariable String id) {
+    @DeleteMapping("/departments/{id}")
+    public void deleteDepartment(@PathVariable String id) {
         hospitalService.deleteDepartment(id);
     }
 
     // Patient Management
     @GetMapping("/patients")
-    public List<com.bil372.mhrsproject.DTOs.AdminPatientDTO> getAllPatients() {
+    public List<AdminPatientDTO> getAllPatients() {
         return patientService.getAllPatients();
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/patients")
-    public com.bil372.mhrsproject.DTOs.AdminPatientDTO createPatient(
-            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminPatientDTO dto) {
+    @PostMapping("/patients")
+    public AdminPatientDTO createPatient(@RequestBody AdminPatientDTO dto) {
         return patientService.createPatient(dto);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/patients/{id}")
-    public void deletePatient(@org.springframework.web.bind.annotation.PathVariable String id) {
+    @DeleteMapping("/patients/{id}")
+    public void deletePatient(@PathVariable String id) {
         patientService.deletePatient(id);
     }
 
     // Appointment Logs
     @GetMapping("/appointments")
-    public List<com.bil372.mhrsproject.DTOs.AdminAppointmentDTO> getAllAppointments(
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String dateFrom,
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String dateTo,
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String search,
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String status,
-            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
-            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size) {
+    public List<AdminAppointmentDTO> getAllAppointments(
+            @RequestParam(required = false) String dateFrom,
+            @RequestParam(required = false) String dateTo,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return appointmentSlotsService.getAllAppointments(dateFrom, dateTo, search, status, page, size);
     }
 
     // Prescriptions
     @GetMapping("/prescriptions")
-    public List<com.bil372.mhrsproject.DTOs.AdminPrescriptionDTO> getAllPrescriptions(
-            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "2000") int limit) {
+    public List<AdminPrescriptionDTO> getAllPrescriptions(
+            @RequestParam(defaultValue = "2000") int limit) {
         return prescriptionsService.getAllPrescriptions(limit);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/prescriptions/{id}")
-    public void deletePrescription(@org.springframework.web.bind.annotation.PathVariable int id) {
+    @DeleteMapping("/prescriptions/{id}")
+    public void deletePrescription(@PathVariable int id) {
         prescriptionsService.deletePrescription(id);
     }
 
     // Admin Users
     @GetMapping("/users")
-    public List<com.bil372.mhrsproject.DTOs.AdminUserDTO> getAllAdmins() {
+    public List<AdminUserDTO> getAllAdmins() {
         return adminDashboardService.getAllAdmins();
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/users")
-    public com.bil372.mhrsproject.DTOs.AdminUserDTO createAdmin(
-            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminUserDTO dto) {
+    @PostMapping("/users")
+    public AdminUserDTO createAdmin(@RequestBody AdminUserDTO dto) {
         return adminDashboardService.createAdmin(dto);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/users/{id}")
-    public void deleteAdmin(@org.springframework.web.bind.annotation.PathVariable String id) {
+    @DeleteMapping("/users/{id}")
+    public void deleteAdmin(@PathVariable String id) {
         adminDashboardService.deleteAdmin(id);
     }
 
-    @org.springframework.web.bind.annotation.DeleteMapping("/waiting-list/{id}")
-    public void deleteWaitingList(@org.springframework.web.bind.annotation.PathVariable int id) {
+    @DeleteMapping("/waiting-list/{id}")
+    public void deleteWaitingList(@PathVariable int id) {
         waitingListService.deleteWaitingList(id);
     }
 }
