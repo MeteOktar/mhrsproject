@@ -20,6 +20,9 @@ public class AdminDashboardService {
     private final AppointmentSlotsRepository appointmentSlotsRepository;
     private final WaitingListRepository waitingListRepository;
 
+    private final com.bil372.mhrsproject.repositories.AdminRepository adminRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     public AdminDashboardService(
             HospitalRepository hospitalRepository,
             HospitalDepartmentRepository hospitalDepartmentRepository,
@@ -27,7 +30,8 @@ public class AdminDashboardService {
             PatientRepository patientRepository,
             AppointmentSlotsRepository appointmentSlotsRepository,
             WaitingListRepository waitingListRepository,
-            com.bil372.mhrsproject.repositories.AdminRepository adminRepository) {
+            com.bil372.mhrsproject.repositories.AdminRepository adminRepository,
+            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
 
         this.hospitalRepository = hospitalRepository;
         this.hospitalDepartmentRepository = hospitalDepartmentRepository;
@@ -36,6 +40,7 @@ public class AdminDashboardService {
         this.appointmentSlotsRepository = appointmentSlotsRepository;
         this.waitingListRepository = waitingListRepository;
         this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AdminDashboardSummaryDTO getSummary() {
@@ -51,14 +56,37 @@ public class AdminDashboardService {
         return dto;
     }
 
-    // Admin Methods
-    private final com.bil372.mhrsproject.repositories.AdminRepository adminRepository;
-
     public java.util.List<com.bil372.mhrsproject.DTOs.AdminUserDTO> getAllAdmins() {
         return adminRepository.findAll().stream()
                 .map(a -> new com.bil372.mhrsproject.DTOs.AdminUserDTO(
                         a.getUsername(),
-                        "ADMIN"))
+                        "ADMIN",
+                        "" // Password not returned for security
+                ))
                 .toList();
+    }
+
+    public com.bil372.mhrsproject.DTOs.AdminUserDTO createAdmin(com.bil372.mhrsproject.DTOs.AdminUserDTO dto) {
+        if (adminRepository.findByUsername(dto.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        com.bil372.mhrsproject.entities.Admin admin = new com.bil372.mhrsproject.entities.Admin();
+        admin.setUsername(dto.getUsername());
+        // Use password from DTO if provided, otherwise default
+        String rawPassword = (dto.getPassword() != null && !dto.getPassword().isBlank())
+                ? dto.getPassword()
+                : "123456";
+        admin.setPasswordHash(passwordEncoder.encode(rawPassword));
+
+        com.bil372.mhrsproject.entities.Admin saved = adminRepository.save(admin);
+
+        return new com.bil372.mhrsproject.DTOs.AdminUserDTO(saved.getUsername(), "ADMIN", "");
+    }
+
+    public void deleteAdmin(String username) {
+        com.bil372.mhrsproject.entities.Admin admin = adminRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+        adminRepository.delete(admin);
     }
 }

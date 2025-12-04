@@ -38,15 +38,15 @@ public class Patient {
     @Column(name = "bloodType")
     private String bloodType;
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL)
     @JsonIgnore
     private List<WaitingList> patientWaitingLists;
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL)
     @JsonIgnore
     private List<AppointmentSlot> pAppointmentSlots;
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL)
     @JsonIgnore
     private List<Prescription> patientPrescriptions;
 

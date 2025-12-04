@@ -68,8 +68,43 @@ public class PatientService {
                         p.getFirstName(),
                         p.getLastName(),
                         "", // Email not in entity
-                        "" // Phone not in entity
-                ))
+                        "", // Phone not in entity
+                        p.getBloodType(),
+                        p.getHeightCm(),
+                        p.getWeightKg()))
                 .toList();
+    }
+
+    public com.bil372.mhrsproject.DTOs.AdminPatientDTO createPatient(com.bil372.mhrsproject.DTOs.AdminPatientDTO dto) {
+        if (patientRepository.existsByPatientNationalId(Long.parseLong(dto.getNationalId()))) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu T.C. ile zaten kayıtlı bir hasta var.");
+        }
+
+        Patient p = new Patient();
+        p.setPatientNationalId(Long.parseLong(dto.getNationalId()));
+        p.setFirstName(dto.getFirstName());
+        p.setLastName(dto.getLastName());
+
+        // Default values for required fields not in DTO
+        p.setPasswordHash(passwordEncoder.encode("123456"));
+        p.setHeightCm(dto.getHeightCm());
+        p.setWeightKg(dto.getWeightKg());
+        p.setBloodType(dto.getBloodGroup());
+
+        Patient saved = patientRepository.save(p);
+
+        return new com.bil372.mhrsproject.DTOs.AdminPatientDTO(
+                String.valueOf(saved.getPatientNationalId()),
+                saved.getFirstName(),
+                saved.getLastName(),
+                "",
+                "",
+                saved.getBloodType(),
+                saved.getHeightCm(),
+                saved.getWeightKg());
+    }
+
+    public void deletePatient(String id) {
+        patientRepository.deleteById(Long.parseLong(id));
     }
 }

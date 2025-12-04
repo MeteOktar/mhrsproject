@@ -59,9 +59,9 @@ public class AdminController {
     }
 
     @org.springframework.web.bind.annotation.PostMapping("/doctors")
-    public void createDoctor(
+    public com.bil372.mhrsproject.DTOs.AdminDoctorDTO createDoctor(
             @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminDoctorDTO dto) {
-        doctorService.createDoctor(dto);
+        return doctorService.createDoctor(dto);
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/doctors/{id}")
@@ -80,10 +80,43 @@ public class AdminController {
         return hospitalService.getAllDepartmentsAsDTO();
     }
 
+    @org.springframework.web.bind.annotation.PostMapping("/hospitals")
+    public com.bil372.mhrsproject.DTOs.AdminHospitalDTO createHospital(
+            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminHospitalDTO dto) {
+        return hospitalService.createHospital(dto);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/hospitals/{id}")
+    public void deleteHospital(@org.springframework.web.bind.annotation.PathVariable String id) {
+        hospitalService.deleteHospital(id);
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/departments")
+    public com.bil372.mhrsproject.DTOs.AdminDepartmentDTO createDepartment(
+            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminDepartmentDTO dto) {
+        return hospitalService.createDepartment(dto);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/departments/{id}")
+    public void deleteDepartment(@org.springframework.web.bind.annotation.PathVariable String id) {
+        hospitalService.deleteDepartment(id);
+    }
+
     // Patient Management
     @GetMapping("/patients")
     public List<com.bil372.mhrsproject.DTOs.AdminPatientDTO> getAllPatients() {
         return patientService.getAllPatients();
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/patients")
+    public com.bil372.mhrsproject.DTOs.AdminPatientDTO createPatient(
+            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminPatientDTO dto) {
+        return patientService.createPatient(dto);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/patients/{id}")
+    public void deletePatient(@org.springframework.web.bind.annotation.PathVariable String id) {
+        patientService.deletePatient(id);
     }
 
     // Appointment Logs
@@ -92,8 +125,10 @@ public class AdminController {
             @org.springframework.web.bind.annotation.RequestParam(required = false) String dateFrom,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String dateTo,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String search,
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String status) {
-        return appointmentSlotsService.getAllAppointments(dateFrom, dateTo, search, status);
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String status,
+            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
+            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size) {
+        return appointmentSlotsService.getAllAppointments(dateFrom, dateTo, search, status, page, size);
     }
 
     // Prescriptions
@@ -103,9 +138,30 @@ public class AdminController {
         return prescriptionsService.getAllPrescriptions(limit);
     }
 
+    @org.springframework.web.bind.annotation.DeleteMapping("/prescriptions/{id}")
+    public void deletePrescription(@org.springframework.web.bind.annotation.PathVariable int id) {
+        prescriptionsService.deletePrescription(id);
+    }
+
     // Admin Users
     @GetMapping("/users")
     public List<com.bil372.mhrsproject.DTOs.AdminUserDTO> getAllAdmins() {
         return adminDashboardService.getAllAdmins();
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/users")
+    public com.bil372.mhrsproject.DTOs.AdminUserDTO createAdmin(
+            @org.springframework.web.bind.annotation.RequestBody com.bil372.mhrsproject.DTOs.AdminUserDTO dto) {
+        return adminDashboardService.createAdmin(dto);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/users/{id}")
+    public void deleteAdmin(@org.springframework.web.bind.annotation.PathVariable String id) {
+        adminDashboardService.deleteAdmin(id);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/waiting-list/{id}")
+    public void deleteWaitingList(@org.springframework.web.bind.annotation.PathVariable int id) {
+        waitingListService.deleteWaitingList(id);
     }
 }

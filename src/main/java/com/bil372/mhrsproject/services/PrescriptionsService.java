@@ -64,4 +64,8 @@ public class PrescriptionsService {
                                 : java.util.Collections.emptyList()))
                 .toList();
     }
+
+    public void deletePrescription(int id) {
+        prescriptionsRepository.deleteById(id);
+    }
 }
