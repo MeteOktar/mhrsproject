@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,7 +47,9 @@ public class Prescription {
     @JoinColumn(name = "departmentId")
     private HospitalDepartment department;
 
-    @OneToMany(mappedBy = "prescription",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "prescription", fetch = FetchType.LAZY,
+    cascade = CascadeType.ALL,
+    orphanRemoval = true)
     @JsonIgnore
     private List<PrescriptionDrugs> prescribedDrugs;
 

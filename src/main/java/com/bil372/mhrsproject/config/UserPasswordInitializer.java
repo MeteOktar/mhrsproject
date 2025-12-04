@@ -1,4 +1,4 @@
-package com.bil372.mhrsproject.config;
+/*package com.bil372.mhrsproject.config;
 
 import com.bil372.mhrsproject.entities.Patient;
 import com.bil372.mhrsproject.entities.Doctor;
@@ -66,4 +66,4 @@ public class UserPasswordInitializer implements CommandLineRunner {
         System.out.println("    Doctors updated: " + doctorCount);
         System.out.println("    Admins updated: " + adminCount);
     }
-}
+}*/
